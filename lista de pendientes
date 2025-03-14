@@ -1,0 +1,35 @@
+class ListaPendientes:
+    def __init__(self):
+        self.pendientes = []
+
+    def agregar_pendiente(self, pendiente):
+        self.pendientes.append(pendiente)
+
+    def eliminar_pendiente(self, pendiente):
+        if pendiente in self.pendientes:
+            self.pendientes.remove(pendiente)
+            print(f"Pendiente '{pendiente}' eliminado con éxito.")
+        else:
+            print(f"Pendiente '{pendiente}' no encontrado.")
+
+    def imprimir_pendientes(self):
+        print("Lista de pendientes:")
+        for i, pendiente in enumerate(self.pendientes, start=1):
+            print(f"{i}. {pendiente}")
+
+# Crear una lista de pendientes
+pendientes = ListaPendientes()
+
+# Agregar pendientes
+pendientes.agregar_pendiente("Comprar leche")
+pendientes.agregar_pendiente("Llamar a la tienda")
+pendientes.agregar_pendiente("Realizar un informe")
+
+# Imprimir la lista de pendientes
+pendientes.imprimir_pendientes()
+
+# Eliminar un pendiente completado
+pendientes.eliminar_pendiente("Llamar a la tienda")
+
+# Imprimir la lista de pendientes actualizada
+pendientes.imprimir_pendientes()
