@@ -1,0 +1,43 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class ListaPendientes {
+    private List<String> pendientes;
+
+    public ListaPendientes() {
+        this.pendientes = new ArrayList<>();
+    }
+
+    public void agregarPendiente(String pendiente) {
+        pendientes.add(pendiente);
+    }
+
+    public void eliminarPendiente(String pendiente) {
+        if (pendientes.remove(pendiente)) {
+            System.out.println("Pendiente '" + pendiente + "' eliminado con éxito.");
+        } else {
+            System.out.println("Pendiente '" + pendiente + "' no encontrado.");
+        }
+    }
+
+    public void imprimirPendientes() {
+        System.out.println("Lista de pendientes:");
+        for (int i = 0; i < pendientes.size(); i++) {
+            System.out.println((i + 1) + ". " + pendientes.get(i));
+        }
+    }
+
+    public static void main(String[] args) {
+        ListaPendientes pendientes = new ListaPendientes();
+
+        pendientes.agregarPendiente("Comprar leche");
+        pendientes.agregarPendiente("Llamar a la tienda");
+        pendientes.agregarPendiente("Realizar un informe");
+
+        pendientes.imprimirPendientes();
+
+        pendientes.eliminarPendiente("Llamar a la tienda");
+
+        pendientes.imprimirPendientes();
+    }
+}
