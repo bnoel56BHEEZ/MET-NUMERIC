@@ -1,0 +1,16 @@
+public class HolaMundo {
+    public static void main(String[] args) {
+        // Imprimir "Hola Mundo"
+        System.out.println("Hola Mundo");
+
+        // Definir dos números para sumar
+        int num1 = 5;
+        int num2 = 7;
+
+        // Realizar la suma
+        int suma = num1 + num2;
+
+        // Imprimir el resultado
+        System.out.println("La suma de " + num1 + " y " + num2 + " es: " + suma);
+    }
+}
