@@ -1,0 +1,88 @@
+import json
+import os
+import time
+from datetime import datetime
+try:
+    from plyer import notification  # Para notificaciones del sistema
+except ImportError:
+    notification = None
+
+ARCHIVO = "recordatorios.json"
+
+def cargar_recordatorios():
+    if not os.path.exists(ARCHIVO):
+        return []
+    with open(ARCHIVO, "r") as f:
+        return json.load(f)
+
+def guardar_recordatorios(recordatorios):
+    with open(ARCHIVO, "w") as f:
+        json.dump(recordatorios, f, indent=4)
+
+def agregar_recordatorio():
+    tarea = input("¿Qué necesitas estudiar? ")
+    fecha = input("¿Para cuándo es el recordatorio? (formato: YYYY-MM-DD HH:MM) ")
+    recordatorios = cargar_recordatorios()
+    recordatorios.append({"tarea": tarea, "fecha": fecha})
+    guardar_recordatorios(recordatorios)
+    print("✅ Recordatorio agregado.")
+
+def mostrar_recordatorios():
+    recordatorios = cargar_recordatorios()
+    if not recordatorios:
+        print("No tienes recordatorios.")
+        return
+    print("\n📚 Recordatorios:")
+    for i, r in enumerate(recordatorios):
+        print(f"{i+1}. {r['tarea']} - {r['fecha']}")
+
+def eliminar_recordatorio():
+    mostrar_recordatorios()
+    recordatorios = cargar_recordatorios()
+    idx = int(input("¿Cuál deseas eliminar? (número): ")) - 1
+    if 0 <= idx < len(recordatorios):
+        eliminado = recordatorios.pop(idx)
+        guardar_recordatorios(recordatorios)
+        print(f"🗑️ Eliminado: {eliminado['tarea']}")
+    else:
+        print("Número inválido.")
+
+def revisar_recordatorios():
+    recordatorios = cargar_recordatorios()
+    ahora = datetime.now()
+    nuevos = []
+    for r in recordatorios:
+        fecha_recordatorio = datetime.strptime(r['fecha'], "%Y-%m-%d %H:%M")
+        if fecha_recordatorio <= ahora:
+            print(f"🔔 ¡Es hora de estudiar!: {r['tarea']} ({r['fecha']})")
+            if notification:
+                notification.notify(
+                    title="Recordatorio de estudio",
+                    message=r['tarea'],
+                    timeout=10
+                )
+        else:
+            nuevos.append(r)
+    guardar_recordatorios(nuevos)
+
+def menu():
+    while True:
+        print("\n📅 Menú de recordatorios:")
+        print("1. Agregar recordatorio")
+        print("2. Ver recordatorios")
+        print("3. Eliminar recordatorio")
+        print("4. Revisar si hay recordatorios pendientes")
+        print("5. Salir")
+
+        opcion = input("Elige una opción: ")
+
+        if opcion == "1":
+            agregar_recordatorio()
+        elif opcion == "2":
+            mostrar_recordatorios()
+        elif opcion == "3":
+            eliminar_recordatorio()
+        elif opcion == "4":
+            revisar_recordatorios()
+        elif opcion == "5":
+            print("¡Hasta luego! ✌
