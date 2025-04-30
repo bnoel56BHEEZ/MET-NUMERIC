@@ -1,0 +1,76 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class Pendiente {
+    String descripcion;
+    boolean completado;
+
+    public Pendiente(String descripcion) {
+        this.descripcion = descripcion;
+        this.completado = false;
+    }
+
+    public void marcarComoCompletado() {
+        this.completado = true;
+    }
+
+    @Override
+    public String toString() {
+        return (completado ? "[✔] " : "[ ] ") + descripcion;
+    }
+}
+
+public class ListaPendientes {
+    private List<Pendiente> pendientes;
+
+    public ListaPendientes() {
+        this.pendientes = new ArrayList<>();
+    }
+
+    public void agregarPendiente(String descripcion) {
+        pendientes.add(new Pendiente(descripcion));
+    }
+
+    public void eliminarPendiente(String descripcion) {
+        boolean eliminado = pendientes.removeIf(p -> p.descripcion.equals(descripcion));
+        if (eliminado) {
+            System.out.println("Pendiente '" + descripcion + "' eliminado con éxito.");
+        } else {
+            System.out.println("Pendiente '" + descripcion + "' no encontrado.");
+        }
+    }
+
+    public void marcarComoCompletado(String descripcion) {
+        for (Pendiente p : pendientes) {
+            if (p.descripcion.equals(descripcion)) {
+                p.marcarComoCompletado();
+                System.out.println("Pendiente '" + descripcion + "' marcado como completado.");
+                return;
+            }
+        }
+        System.out.println("Pendiente '" + descripcion + "' no encontrado.");
+    }
+
+    public void imprimirPendientes() {
+        System.out.println("Lista de pendientes:");
+        for (int i = 0; i < pendientes.size(); i++) {
+            System.out.println((i + 1) + ". " + pendientes.get(i));
+        }
+    }
+
+    public static void main(String[] args) {
+        ListaPendientes pendientes = new ListaPendientes();
+
+        pendientes.agregarPendiente("Comprar leche");
+        pendientes.agregarPendiente("Llamar a la tienda");
+        pendientes.agregarPendiente("Realizar un informe");
+
+        pendientes.marcarComoCompletado("Comprar leche");
+
+        pendientes.imprimirPendientes();
+
+        pendientes.eliminarPendiente("Llamar a la tienda");
+
+        pendientes.imprimirPendientes();
+    }
+}
