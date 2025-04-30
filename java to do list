@@ -41,3 +41,4 @@ public class ListaPendientes {
         pendientes.imprimirPendientes();
     }
 }
+//agregamos la opción para marcar pendientes como completados
