@@ -1,0 +1,62 @@
+def convertir_longitud():
+    print("\nConversión de Longitud:")
+    print("1. Kilómetros a Millas")
+    print("2. Millas a Kilómetros")
+    opcion = input("Elige una opción: ")
+    
+    valor = float(input("Ingresa el valor a convertir: "))
+    if opcion == "1":
+        print(f"{valor} km = {valor * 0.621371:.2f} millas")
+    elif opcion == "2":
+        print(f"{valor} millas = {valor / 0.621371:.2f} km")
+    else:
+        print("Opción no válida.")
+
+def convertir_temperatura():
+    print("\nConversión de Temperatura:")
+    print("1. Celsius a Fahrenheit")
+    print("2. Fahrenheit a Celsius")
+    opcion = input("Elige una opción: ")
+    
+    valor = float(input("Ingresa el valor a convertir: "))
+    if opcion == "1":
+        print(f"{valor} °C = {(valor * 9/5) + 32:.2f} °F")
+    elif opcion == "2":
+        print(f"{valor} °F = {((valor - 32) * 5/9):.2f} °C")
+    else:
+        print("Opción no válida.")
+
+def convertir_peso():
+    print("\nConversión de Peso:")
+    print("1. Kilogramos a Libras")
+    print("2. Libras a Kilogramos")
+    opcion = input("Elige una opción: ")
+    
+    valor = float(input("Ingresa el valor a convertir: "))
+    if opcion == "1":
+        print(f"{valor} kg = {valor * 2.20462:.2f} lb")
+    elif opcion == "2":
+        print(f"{valor} lb = {valor / 2.20462:.2f} kg")
+    else:
+        print("Opción no válida.")
+
+# Menú principal
+while True:
+    print("\n--- Conversor de Unidades ---")
+    print("1. Longitud")
+    print("2. Temperatura")
+    print("3. Peso")
+    print("4. Salir")
+    opcion = input("Elige una categoría (1-4): ")
+
+    if opcion == "1":
+        convertir_longitud()
+    elif opcion == "2":
+        convertir_temperatura()
+    elif opcion == "3":
+        convertir_peso()
+    elif opcion == "4":
+        print("Saliendo del programa.")
+        break
+    else:
+        print("Opción no válida. Intenta de nuevo.")
