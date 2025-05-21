@@ -1,0 +1,30 @@
+from collections import Counter
+
+# Cantidad de números a ingresar
+cantidad = 50
+
+# Tamaño de la terminación a analizar (por ejemplo: 2 para los últimos dos dígitos)
+tamaño_terminacion = 2
+
+numeros = []
+
+# Entrada de datos
+print(f"Ingrese {cantidad} números de 5 dígitos:")
+
+while len(numeros) < cantidad:
+    entrada = input(f"Número {len(numeros)+1}: ")
+    if entrada.isdigit() and len(entrada) == 5:
+        numeros.append(entrada)
+    else:
+        print("Por favor, ingresa un número válido de 5 dígitos.")
+
+# Obtener terminaciones
+terminaciones = [num[-tamaño_terminacion:] for num in numeros]
+
+# Contar frecuencias
+contador = Counter(terminaciones)
+
+# Mostrar las terminaciones más comunes
+print("\nTerminaciones más comunes:")
+for terminacion, frecuencia in contador.most_common():
+    print(f"Terminación {terminacion}: {frecuencia} veces")
