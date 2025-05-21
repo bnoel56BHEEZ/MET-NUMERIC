@@ -1,0 +1,29 @@
+//creacion de nuestro programa para descargar videos de youtube
+pip install pytube
+
+from pytube import YouTube
+
+# Pedir al usuario la URL del video
+url = input("Introduce la URL del video de YouTube: ")
+
+try:
+    yt = YouTube(url)
+    
+    print(f"\nTítulo: {yt.title}")
+    print(f"Autor: {yt.author}")
+    print(f"Duración: {yt.length // 60} minutos")
+
+    # Obtener la mejor resolución disponible (video + audio)
+    stream = yt.streams.get_highest_resolution()
+
+    # Descargar el video
+    print("\nDescargando...")
+    stream.download()
+    print("¡Descarga completada!")
+
+except Exception as e:
+    print("Ocurrió un error:", e)
+
+
+//despues de esto ejecutamos el archivo en la consola
+python descargar_youtube.py
