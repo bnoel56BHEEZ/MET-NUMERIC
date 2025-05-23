@@ -1,0 +1,28 @@
+#!/bin/bash
+
+read -p "Ingresa el valor mínimo del intervalo: " min
+read -p "Ingresa el valor máximo del intervalo: " max
+
+echo "Buscando ternas (x, y, z) que cumplan z² = x² + y² en el intervalo [$min, $max]..."
+echo
+
+found=0
+for (( x=$min; x<=$max; x++ )); do
+    for (( y=$x; y<=$max; y++ )); do  # y empieza en x para evitar duplicados como (3,4,5) y (4,3,5)
+        for (( z=$y; z<=$max; z++ )); do
+            x2=$((x * x))
+            y2=$((y * y))
+            z2=$((z * z))
+            suma=$((x2 + y2))
+
+            if [ "$z2" -eq "$suma" ]; then
+                echo " Se cumple: $x² + $y² = $z² → $x²($x2) + $y²($y2) = $z²($z2)"
+                found=1
+            fi
+        done
+    done
+done
+
+if [ "$found" -eq 0 ]; then
+    echo " No se encontraron ternas pitagóricas en ese intervalo."
+fi
