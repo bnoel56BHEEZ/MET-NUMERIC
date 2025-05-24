@@ -1,0 +1,27 @@
+//ejemplo de mi menu de scripts de bash
+#!/bin/bash
+
+echo "MENÚ PRINCIPAL"
+echo "1) Suma 2 números"
+echo "2) x_tabla"
+echo "3) 10 tablas"
+echo "4) Factorial"
+echo "5) Fórmula"
+echo "6) Número mayor"
+echo "7) Edad"
+echo "8) Salir"
+
+echo -n "Elige una opción: "
+read x
+
+case $x in
+    1) ./suma_2_numeros.sh ;;
+    2) ./x_tabla.sh ;;
+    3) ./diez_tablas.sh ;;
+    4) ./factorial.sh ;;
+    5) ./formula.sh ;;
+    6) ./numero_mayor.sh ;;
+    7) ./edad.sh ;;
+    8) exit ;;
+    *) echo "Opción no válida" ;;
+esac
