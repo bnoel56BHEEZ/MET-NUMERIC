@@ -1,0 +1,16 @@
+//con este codigo veremos el progreso de un numero que elijamos en este caso yo quiero ver el progreso de 43 de 1000
+import os
+
+def mostrar_barra(valor, maximo=1000, ancho=50):
+    porcentaje = valor / maximo
+    cantidad_barras = int(porcentaje * ancho)
+    
+    barra = "\033[92m" + "█" * cantidad_barras + "\033[0m"  # Verde
+    barra += "-" * (ancho - cantidad_barras)
+
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print(f"[{barra}] {valor}/{maximo}")
+
+# Ejemplo de uso
+valor = int(input("Ingresa un número entre 0 y 1000: "))
+mostrar_barra(valor)
