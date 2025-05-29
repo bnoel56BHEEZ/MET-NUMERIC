@@ -1,0 +1,11 @@
+def factorial(n):
+    if n < 0:
+        return "El factorial no está definido para números negativos."
+    if n == 0 or n == 1:
+        return 1
+    return n * factorial(n - 1)
+
+# Ejemplo de uso
+numero = int(input("Introduce un número: "))
+resultado = factorial(numero)
+print(f"El factorial de {numero} es {resultado}")
