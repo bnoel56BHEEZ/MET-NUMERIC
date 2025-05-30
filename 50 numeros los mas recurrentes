@@ -1,0 +1,26 @@
+from collections import Counter
+
+# Paso 1: Pedir 50 números de 5 cifras
+numeros = []
+print("Ingresa 50 números de 5 cifras:")
+
+while len(numeros) < 50:
+    try:
+        num = int(input(f"Número {len(numeros)+1}: "))
+        if 10000 <= num <= 99999:
+            numeros.append(num)
+        else:
+            print("El número debe tener exactamente 5 cifras.")
+    except ValueError:
+        print("Por favor, ingresa un número válido.")
+
+# Paso 2: Extraer las terminaciones de dos cifras
+terminaciones = [str(num)[-2:] for num in numeros]
+
+# Paso 3: Contar las terminaciones más frecuentes
+contador = Counter(terminaciones)
+
+# Paso 4: Mostrar las terminaciones ordenadas por frecuencia
+print("\nTerminaciones más comunes:")
+for terminacion, cantidad in contador.most_common():
+    print(f"Terminación {terminacion}: {cantidad} veces")
