@@ -1,0 +1,23 @@
+import os
+import torch
+from tortoise.api import TextToSpeech
+from tortoise.utils.audio import load_audio, load_voice
+
+# Usa la GPU si está disponible
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+# Instancia el motor de TTS
+tts = TextToSpeech(use_deepspeed=True, device=device)
+
+# Texto que se desea leer con la voz clonada
+texto = "Hola, este es un ejemplo de clonación de voz con inteligencia artificial."
+
+# Nombre de la carpeta de la voz clonada
+voice_name = 'mivoz'  # Debe coincidir con la carpeta en tortoise/voices/
+
+# Generar el audio
+gen = tts.tts(text=texto, voice=voice_name, preset='fast')
+
+# Guardar resultado
+from scipy.io.wavfile import write
+write("voz_clonada.wav", 24000, gen.squeeze().cpu().numpy())
