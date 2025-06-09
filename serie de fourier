@@ -1,0 +1,21 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from sympy import symbols, integrate, sin, cos, pi, lambdify, sympify
+
+# Símbolos simbólicos
+x, n = symbols('x n')
+
+# Entrada del usuario
+f_expr = input("Ingresa la función f(x) en [-pi, pi], por ejemplo: x**2 : ")
+N = int(input("Número de términos de la serie de Fourier: "))
+
+# Convertimos f(x) en una expresión simbólica
+f = sympify(f_expr)
+
+# Cálculo de coeficientes
+a0 = (1 / pi) * integrate(f, (x, -pi, pi))
+an = lambda n_val: (1 / pi) * integrate(f * cos(n_val * x), (x, -pi, pi))
+bn = lambda n_val: (1 / pi) * integrate(f * sin(n_val * x), (x, -pi, pi))
+
+# Crear función aproximada
+x_vals = np.linspace(-np.pi, np.p_
