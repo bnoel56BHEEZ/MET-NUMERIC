@@ -34,7 +34,7 @@ if st.button("✅ Enviar Asistencia"):
         st.warning("Marca al menos un alumno para registrar asistencia.")
 
 # Mostrar código QR (enlace público o local)
-url_app = "https://tupase.streamlit.app"  # cambia si ya tienes la versión en la nube
+url_app = "https://paselista3402.streamlit.app/"  # cambia si ya tienes la versión en la nube
 qr = qrcode.make(url_app)
 buf = BytesIO()
 qr.save(buf)
