@@ -6,46 +6,60 @@ from datetime import datetime
 import pandas as pd
 import os
 
-# Configuración de la app
+# Configuración básica
 st.set_page_config(page_title="Pase de Lista", layout="centered")
 st.title("📝 Pase de Lista - Grupo A")
 
 # Lista de alumnos
 alumnos = ['Ana', 'Bruno', 'Carlos', 'Diana', 'Eduardo']
-asistencia = {}
+archivo_csv = "registro_asistencia.csv"
 
-st.subheader("📋 Selecciona quién está presente:")
-for alumno in alumnos:
-    asistencia[alumno] = st.checkbox(alumno)
+# Selección de usuario
+rol = st.selectbox("Selecciona tu rol:", ["Alumno", "Profesor"])
 
-# Guardar asistencia en CSV
+# --- ALUMNO ---
+if rol == "Alumno":
+    st.subheader("📖 Historial de Asistencias")
+    if os.path.exists(archivo_csv):
+        df = pd.read_csv(archivo_csv, names=["Fecha", "Alumno"])
+        st.dataframe(df)
+    else:
+        st.info("Aún no hay asistencias registradas.")
+    st.stop()
+
+# --- PROFESOR ---
+st.subheader("🔐 Acceso para profesores")
+pwd = st.text_input("Ingresa la contraseña:", type="password")
+
+if pwd != "ASP5005PROF":
+    st.warning("Introduce la contraseña para continuar.")
+    st.stop()
+
+# Si la contraseña es correcta, mostrar herramientas del profe
+st.success("Acceso autorizado.")
+
+st.subheader("📅 Selecciona fecha de asistencia")
+fecha_seleccionada = st.date_input("Día a registrar", value=datetime.today())
+
+st.subheader("📋 Marca a los presentes:")
+asistencia = {alumno: st.checkbox(alumno) for alumno in alumnos}
+
 if st.button("✅ Enviar Asistencia"):
     presentes = [nombre for nombre, presente in asistencia.items() if presente]
     if presentes:
-        fecha = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        archivo_csv = "registro_asistencia.csv"
-
+        fecha_str = fecha_seleccionada.strftime("%Y-%m-%d")
         with open(archivo_csv, "a", newline="", encoding="utf-8") as archivo:
             writer = csv.writer(archivo)
             for alumno in presentes:
-                writer.writerow([fecha, alumno])
-        st.success("¡Asistencia registrada con éxito!")
+                writer.writerow([fecha_str, alumno])
+        st.success("Asistencia registrada con éxito.")
     else:
-        st.warning("Marca al menos un alumno para registrar asistencia.")
+        st.warning("Debes seleccionar al menos un alumno.")
 
-# Mostrar código QR (enlace público o local)
-url_app = "https://paselista3402.streamlit.app/"  # cambia si ya tienes la versión en la nube
+# Código QR con enlace público
+st.subheader("📱 Acceso rápido para alumnos")
+url_app = "https://paselista3402.streamlit.app/"
 qr = qrcode.make(url_app)
 buf = BytesIO()
 qr.save(buf)
-
-st.subheader("📱 Escanea para abrir:")
-st.image(buf, caption="Código QR de acceso", use_column_width=False)
-
-# Mostrar historial si existe
-if os.path.exists("registro_asistencia.csv"):
-    st.subheader("📖 Historial de Asistencias")
-    df = pd.read_csv("registro_asistencia.csv", names=["Fecha", "Alumno"])
-    st.dataframe(df)
-else:
-    st.info("Aún no hay asistencias registradas.")
+st.image(buf, caption="Escanea para abrir la app", use_column_width=False)
