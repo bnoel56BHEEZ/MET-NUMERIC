@@ -62,4 +62,4 @@ url_app = "https://paselista3402.streamlit.app/"
 qr = qrcode.make(url_app)
 buf = BytesIO()
 qr.save(buf)
-st.image(buf, caption="Escanea para abrir la app", use_column_width=False)
+st.image(buf, caption="Escanea para abrir la app", use_container_width=False)
