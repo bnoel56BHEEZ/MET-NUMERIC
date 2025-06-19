@@ -50,6 +50,17 @@ class AsistenciaOut(BaseModel):
 # Creamos la API
 app = FastAPI()
 
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Puedes poner dominios específicos luego
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 # Endpoints
 
 # Registrar usuario
