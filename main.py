@@ -109,3 +109,7 @@ def listar_asistencias():
     asistencias = db.query(Asistencia).all()
     db.close()
     return asistencias
+
+@app.get("/")
+def raiz():
+    return {"mensaje": "¡API de asistencia activa y funcionando!"}
