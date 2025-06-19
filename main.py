@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
 from sqlalchemy import create_engine, Column, Integer, String, Date, ForeignKey
@@ -11,6 +12,18 @@ DATABASE_URL = "sqlite:///./asistencia.db"
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 Base = declarative_base()
 SessionLocal = sessionmaker(bind=engine)
+
+# Creamos la API
+app = FastAPI()
+
+# Middleware de CORS (permitir conexión desde frontend)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Puedes restringir a dominios específicos
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Definimos modelos de BD
 class Usuario(Base):
@@ -47,23 +60,8 @@ class AsistenciaOut(BaseModel):
     class Config:
         orm_mode = True
 
-# Creamos la API
-app = FastAPI()
-
-from fastapi.middleware.cors import CORSMiddleware
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Puedes poner dominios específicos luego
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-
 # Endpoints
 
-# Registrar usuario
 @app.post("/usuarios", response_model=UsuarioOut)
 def crear_usuario(usuario: UsuarioCreate):
     db = SessionLocal()
@@ -79,7 +77,6 @@ def crear_usuario(usuario: UsuarioCreate):
         db.close()
     return nuevo_usuario
 
-# Eliminar usuario
 @app.delete("/usuarios/{usuario_id}")
 def eliminar_usuario(usuario_id: int):
     db = SessionLocal()
@@ -91,7 +88,6 @@ def eliminar_usuario(usuario_id: int):
     db.close()
     return {"mensaje": "Usuario eliminado"}
 
-# Listar usuarios
 @app.get("/usuarios", response_model=List[UsuarioOut])
 def listar_usuarios():
     db = SessionLocal()
@@ -99,7 +95,6 @@ def listar_usuarios():
     db.close()
     return usuarios
 
-# Pasar lista (registrar asistencia)
 @app.post("/asistencia", response_model=AsistenciaOut)
 def pasar_lista(asistencia: AsistenciaCreate):
     db = SessionLocal()
@@ -113,7 +108,6 @@ def pasar_lista(asistencia: AsistenciaCreate):
     db.close()
     return nueva_asistencia
 
-# Consultar asistencias
 @app.get("/asistencia", response_model=List[AsistenciaOut])
 def listar_asistencias():
     db = SessionLocal()
