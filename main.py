@@ -7,25 +7,25 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from datetime import date
 
-# Inicializamos la base de datos SQLite
-DATABASE_URL = "sqlite:///./asistencia.db"
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+# 🔗 Conexión a PostgreSQL en Railway
+DATABASE_URL = "postgresql://postgres:QFfbAtkUeKqRvhQWCHZSTrtLvkCOsdHg@postgres.railway.internal:5432/railway"
+engine = create_engine(DATABASE_URL)
 Base = declarative_base()
 SessionLocal = sessionmaker(bind=engine)
 
-# Creamos la API
+# Inicializa la API
 app = FastAPI()
 
-# Middleware de CORS (permitir conexión desde frontend)
+# Middleware CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Puedes restringir a dominios específicos
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Definimos modelos de BD
+# Modelos
 class Usuario(Base):
     __tablename__ = "usuarios"
     id = Column(Integer, primary_key=True, index=True)
@@ -38,9 +38,10 @@ class Asistencia(Base):
     fecha = Column(Date, default=date.today())
     usuario = relationship("Usuario")
 
+# Crea las tablas en PostgreSQL si no existen
 Base.metadata.create_all(bind=engine)
 
-# Modelos de request/response
+# Esquemas Pydantic
 class UsuarioCreate(BaseModel):
     nombre: str
 
@@ -117,4 +118,4 @@ def listar_asistencias():
 
 @app.get("/")
 def raiz():
-    return {"mensaje": "¡API de asistencia activa y funcionando!"}
+    return {"mensaje": "¡API de asistencia activa y funcionando con PostgreSQL en Railway!"}
