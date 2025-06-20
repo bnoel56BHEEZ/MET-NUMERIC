@@ -6,6 +6,7 @@ from sqlalchemy import create_engine, Column, Integer, String, Date, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from datetime import date
+import os
 
 # 🔗 Conexión a PostgreSQL en Railway
 DATABASE_URL = "postgresql://postgres:QFfbAtkUeKqRvhQWCHZSTrtLvkCOsdHg@postgres.railway.internal:5432/railway"
@@ -35,10 +36,9 @@ class Asistencia(Base):
     __tablename__ = "asistencias"
     id = Column(Integer, primary_key=True, index=True)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"))
-    fecha = Column(Date, default=date.today())
+    fecha = Column(Date, default=date.today)  # ¡Fíjate en los paréntesis removidos!
     usuario = relationship("Usuario")
 
-# Crea las tablas en PostgreSQL si no existen
 Base.metadata.create_all(bind=engine)
 
 # Esquemas Pydantic
@@ -62,7 +62,6 @@ class AsistenciaOut(BaseModel):
         orm_mode = True
 
 # Endpoints
-
 @app.post("/usuarios", response_model=UsuarioOut)
 def crear_usuario(usuario: UsuarioCreate):
     db = SessionLocal()
@@ -99,15 +98,21 @@ def listar_usuarios():
 @app.post("/asistencia", response_model=AsistenciaOut)
 def pasar_lista(asistencia: AsistenciaCreate):
     db = SessionLocal()
-    usuario = db.query(Usuario).filter(Usuario.id == asistencia.usuario_id).first()
-    if not usuario:
-        raise HTTPException(status_code=404, detail="Usuario no encontrado")
-    nueva_asistencia = Asistencia(usuario_id=usuario.id)
-    db.add(nueva_asistencia)
-    db.commit()
-    db.refresh(nueva_asistencia)
-    db.close()
-    return nueva_asistencia
+    try:
+        usuario = db.query(Usuario).filter(Usuario.id == asistencia.usuario_id).first()
+        if not usuario:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        nueva_asistencia = Asistencia(usuario_id=usuario.id)
+        db.add(nueva_asistencia)
+        db.commit()
+        db.refresh(nueva_asistencia)
+        return nueva_asistencia
+    except Exception as e:
+        db.rollback()
+        print(f"Error al guardar asistencia: {e}")
+        raise HTTPException(status_code=500, detail="Error al registrar asistencia")
+    finally:
+        db.close()
 
 @app.get("/asistencia", response_model=List[AsistenciaOut])
 def listar_asistencias():
@@ -119,8 +124,6 @@ def listar_asistencias():
 @app.get("/")
 def raiz():
     return {"mensaje": "¡API de asistencia activa y funcionando con PostgreSQL en Railway!"}
-
-import os
 
 if __name__ == "__main__":
     import uvicorn
